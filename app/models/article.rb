@@ -1,4 +1,4 @@
 class Article < ApplicationRecord
   validates :title, presence: true
-  before_save ->() { self.gif_url = GifFinderService.new(self.title).run }
+  after_create ->() { RefreshGifWorker.new.perform(self.id) }
 end
